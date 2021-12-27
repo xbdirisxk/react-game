@@ -50,3 +50,12 @@ ul {
 .game-info {
 	margin-left: 20px;
 }
+
+.current-move {
+	font-weight: bold;
+	color: hsl(0, 100%, 21%);
+}
+
+.highlight {
+	background-color: hsl(0, 0%, 95%);
+}

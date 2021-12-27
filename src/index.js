@@ -2,39 +2,46 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const Square = (props) => {
+const Square = ({ value, onClick }) => {
 	return (
-		<button className='square' onClick={props.onClick}>
-			{props.value}
+		<button className='square' onClick={onClick}>
+			{value}
 		</button>
 	);
 };
 
-const Board = ({ squares, onClick }) => {
-	const renderSquare = (i) => {
-		return <Square value={squares[i]} onClick={() => onClick(i)} />;
-	};
+class Board extends React.Component {
+	renderSquare(i) {
+		return (
+			<Square
+				value={this.props.squares[i]}
+				onClick={() => this.props.onClick(i)}
+			/>
+		);
+	}
 
-	return (
-		<div>
-			<div className='board-row'>
-				{renderSquare(0)}
-				{renderSquare(1)}
-				{renderSquare(2)}
+	render() {
+		return (
+			<div>
+				<div className='board-row'>
+					{this.renderSquare(0)}
+					{this.renderSquare(1)}
+					{this.renderSquare(2)}
+				</div>
+				<div className='board-row'>
+					{this.renderSquare(3)}
+					{this.renderSquare(4)}
+					{this.renderSquare(5)}
+				</div>
+				<div className='board-row'>
+					{this.renderSquare(6)}
+					{this.renderSquare(7)}
+					{this.renderSquare(8)}
+				</div>
 			</div>
-			<div className='board-row'>
-				{renderSquare(3)}
-				{renderSquare(4)}
-				{renderSquare(5)}
-			</div>
-			<div className='board-row'>
-				{renderSquare(6)}
-				{renderSquare(7)}
-				{renderSquare(8)}
-			</div>
-		</div>
-	);
-};
+		);
+	}
+}
 
 class Game extends React.Component {
 	constructor(props) {
@@ -75,17 +82,24 @@ class Game extends React.Component {
 			const desc = move ? 'go to move #' + move : 'Go to game start';
 			return (
 				<li key={move}>
-					<button onClick={() => this.JumpTo(move)}>{desc}</button>
+					<button
+						className={step === current ? 'current-move' : ''}
+						onClick={() => this.JumpTo(move)}
+					>
+						{desc}
+					</button>
 				</li>
 			);
 		});
 
 		let status;
-		if (winner) {
-			status = 'Winner: ' + winner;
-		} else {
+		let gameFinished = current.squares.every((square) => square !== null);
+		if (winner) status = 'Winner: ' + winner;
+		else if (gameFinished && !winner) status = 'game is TAI';
+		else {
 			status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
 		}
+
 		return (
 			<div className='game'>
 				<div className='game-board'>
